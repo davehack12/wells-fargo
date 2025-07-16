@@ -1,0 +1,239 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wells Fargo Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Merriweather', serif;
+    }
+  </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+  <header class="bg-[#C41230] text-white flex items-center justify-between px-4 py-2">
+    <h1 class="font-bold text-lg select-none">WELLS FARGO</h1>
+    <button aria-label="Menu" class="space-y-1.5">
+      <span class="block w-6 h-[2px] bg-white rounded"></span>
+      <span class="block w-6 h-[2px] bg-white rounded"></span>
+      <span class="block w-6 h-[2px] bg-white rounded"></span>
+    </button>
+  </header>
+  <div class="border-b-2 border-[#D9B310]"></div>
+
+  <main class="flex-grow px-6 pt-8 max-w-md mx-auto w-full">
+    <h2 class="text-2xl mb-6 font-normal text-center">Good afternoon</h2>
+
+    <form id="loginForm" class="space-y-4" novalidate>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        placeholder="Username"
+        class="w-full border border-gray-400 rounded-xl px-4 py-3 text-gray-600 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent"
+        autocomplete="username"
+        required
+      />
+
+      <div class="relative">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          class="w-full border border-gray-400 rounded-xl px-4 py-3 pr-20 text-gray-600 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent"
+          autocomplete="current-password"
+          required
+        />
+        <button
+          type="button"
+          id="togglePassword"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-[#1E1E5A] font-semibold text-sm"
+          aria-label="Show password"
+        >
+          Show
+        </button>
+      </div>
+
+      <label class="inline-flex items-center space-x-2 text-gray-700 text-sm select-none">
+        <input type="checkbox" name="save-username" id="save-username" class="w-4 h-4 border border-gray-400 rounded" />
+        <span>Save username</span>
+      </label>
+
+      <p class="text-xs text-gray-600 leading-tight max-w-[320px]">
+        To help keep your account secure, save your username only on devices that aren't used by other people.
+      </p>
+
+      <button
+        type="submit"
+        id="signOnBtn"
+        class="w-full bg-gray-300 text-gray-400 rounded-full py-3 mt-4 font-semibold cursor-not-allowed select-none"
+        disabled
+      >
+        Sign on
+      </button>
+
+      <p class="text-center text-gray-700 mt-3 mb-3">or</p>
+
+      <button
+        type="button"
+        class="w-full border border-gray-700 rounded-full py-2 flex items-center justify-center space-x-2 font-semibold text-gray-900 hover:bg-gray-100"
+      >
+        <i class="fas fa-user-friends text-lg"></i>
+        <span>Use a passkey</span>
+      </button>
+
+      <p class="text-xs text-gray-700 mt-3 max-w-[320px]">
+        Don't have one? Create a passkey after signing on and skip the password next time.
+      </p>
+
+      <a
+        href="#"
+        class="inline-flex items-center space-x-1 text-[#4B3B9B] text-sm mt-6 select-none"
+      >
+        <span>→</span>
+        <span>Forgot username or password?</span>
+      </a>
+
+      <div
+        id="errorMsg"
+        class="mt-6 p-4 border border-red-600 bg-red-100 text-red-700 rounded hidden"
+        role="alert"
+        aria-live="assertive"
+      >
+        <strong>Begin region</strong><br />
+        <strong>Error</strong><br />
+        That combination doesn't match our records. You can try again, or we can help you
+      </div>
+    </form>
+
+    <section
+      class="border border-gray-300 rounded p-4 mt-8 text-xs text-gray-800 max-w-[320px]"
+      aria-label="Investment and Insurance Products Disclaimer"
+    >
+     
+
+  <script>
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const signOnBtn = document.getElementById('signOnBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const loginForm = document.getElementById('loginForm');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+
+    // Enable sign on button only if both fields have some value
+    function toggleSignOnButton() {
+      if (usernameInput.value.trim() && passwordInput.value.trim()) {
+        signOnBtn.disabled = false;
+        signOnBtn.classList.remove('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
+        signOnBtn.classList.add('bg-[#C41230]', 'text-white', 'cursor-pointer');
+      } else {
+        signOnBtn.disabled = true;
+        signOnBtn.classList.add('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
+        signOnBtn.classList.remove('bg-[#C41230]', 'text-white', 'cursor-pointer');
+      }
+    }
+
+    usernameInput.addEventListener('input', () => {
+      errorMsg.classList.add('hidden');
+      toggleSignOnButton();
+    });
+
+    passwordInput.addEventListener('input', () => {
+      errorMsg.classList.add('hidden');
+      toggleSignOnButton();
+    });
+
+    togglePasswordBtn.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePasswordBtn.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        togglePasswordBtn.textContent = 'Show';
+      }
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // Fixed username and password
+      const validUsername = 'Kelvin Giggs';
+      const validPassword = 'Kelvin102.';
+
+      if (username === validUsername && password === validPassword) {
+        // Redirect to home.html
+        window.location.href = 'dashboard.html';
+      } else {
+        // Show error message
+        errorMsg.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wells Fargo Footer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+</head>
+<body class="bg-white text-gray-900 font-sans">
+  <div class="max-w-md mx-auto p-4">
+    <div class="border border-gray-300 p-4 mb-6">
+      <ul class="list-disc list-inside space-y-3 font-semibold text-gray-800">
+        <li>
+          Not Insured by the FDIC or Any Federal Government Agency
+        </li>
+        <li>
+          Not a Deposit or Other Obligation of, or Guaranteed by, the Bank or Any Bank Affiliate
+        </li>
+        <li>
+          Subject to Investment Risks, Including Possible Loss of the Principal Amount Invested
+        </li>
+      </ul>
+    </div>
+    <p class="mb-6 text-gray-700 text-sm">
+      Deposit products offered by Wells Fargo Bank, N.A. Member FDIC.
+    </p>
+  </div>
+
+  <footer class="bg-gray-100 text-gray-700 text-xs max-w-md mx-auto px-4 py-6">
+    <div class="grid grid-cols-2 gap-y-4 gap-x-8 mb-6">
+      <div>
+        <p>About Wells Fargo</p>
+        <p class="mt-4">Online Access Agreement</p>
+        <p class="mt-4">Privacy, Cookies, Security &amp; Legal</p>
+        <p class="mt-4">Do not sell or share my personal information</p>
+        <p class="mt-4">Notice of Data Collection</p>
+      </div>
+      <div>
+        <p>Report Email Fraud</p>
+        <p class="mt-4">Security Center</p>
+        <p class="mt-4">Sitemap</p>
+        <p class="mt-4">Give Us Feedback</p>
+      </div>
+    </div>
+    <hr class="border-gray-300 mb-4" />
+    <p>© 1999 - 2025 Wells Fargo. All rights reserved. NMLSR ID 399801</p>
+  </footer>
+</body>
+</html>
