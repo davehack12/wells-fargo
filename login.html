@@ -1,239 +1,183 @@
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wells Fargo Login</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
-    rel="stylesheet"
-  />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hosting Subscription Expired</title>
+  <meta name="description" content="Notice: hosting subscription has finished" />
   <style>
-    body {
-      font-family: 'Merriweather', serif;
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1720;
+      --accent:#ff6b6b;
+      --accent-2:#ffd166;
+      --muted:#9aa6b2;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; background:
+      radial-gradient(600px 400px at 10% 10%, rgba(255,107,107,0.03), transparent 10%),
+      linear-gradient(180deg,#071018 0%, #0b0f14 100%); color:#eaf0f6;}
+    .wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px;}
+    .card{
+      width:100%; max-width:980px; border-radius:var(--radius); background:linear-gradient(180deg,var(--card), rgba(13,18,24,0.9));
+      box-shadow: 0 10px 30px rgba(2,6,10,0.6); overflow:hidden; border:1px solid rgba(255,255,255,0.03);
+      display:grid; grid-template-columns: 1fr 380px;
+    }
+    @media (max-width:880px){ .card{grid-template-columns:1fr; } }
+    .left{padding:36px 36px 32px;}
+    .brand{display:flex; gap:14px; align-items:center; margin-bottom:8px;}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff9a9a); display:grid;place-items:center; font-weight:800;}
+    h1{margin:6px 0 0; font-size:1.6rem; letter-spacing:-0.4px;}
+    p.lead{color:var(--muted); margin-top:12px; line-height:1.5;}
+    .notice{
+      margin-top:22px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,107,107,0.06), rgba(255,107,107,0.02));
+      border:1px solid rgba(255,107,107,0.08); display:flex; gap:12px; align-items:flex-start;
+    }
+    .notice .dot{width:12px;height:12px;border-radius:50%; background:var(--accent); box-shadow:0 0 12px rgba(255,107,107,0.25); margin-top:6px;}
+    .notice .txt{font-size:0.95rem; color:#fff}
+    .invoice{
+      margin-top:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+    }
+    .inv-item{background:var(--glass); padding:12px 14px; border-radius:10px; min-width:160px; border:1px solid rgba(255,255,255,0.02);}
+    .inv-item b{display:block; font-size:1rem}
+    .actions{margin-top:22px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+    .btn{
+      -webkit-appearance:none; appearance:none; border:0; padding:12px 16px; border-radius:10px; font-weight:700; cursor:pointer;
+      background:linear-gradient(90deg,var(--accent),#ff8b8b); color:#081019; box-shadow:0 8px 20px rgba(255,107,107,0.12);
+    }
+    .btn.secondary{background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); font-weight:600;}
+    .small{font-size:0.9rem; color:var(--muted); margin-top:12px;}
+
+    /* Right column */
+    .right{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:28px; border-left:1px solid rgba(255,255,255,0.02);}
+    @media (max-width:880px){ .right{order:3; border-left:0; border-top:1px solid rgba(255,255,255,0.02);} }
+    .summary h3{margin:0 0 8px; color:var(--accent-2); font-size:1rem;}
+    .summary p{color:var(--muted); margin:0 0 12px}
+    .host-logo{width:100%; height:110px; background:linear-gradient(135deg,#0f172a,#071429); border-radius:10px; display:grid; place-items:center; font-weight:800; color:#9fb8c9; font-size:1.05rem}
+    .meta{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+    .meta .m{background:var(--glass-2); padding:10px 12px; border-radius:8px; color:var(--muted); font-size:0.92rem}
+
+    footer{grid-column:1/-1; padding:18px 36px; border-top:1px dashed rgba(255,255,255,0.02); color:var(--muted); font-size:0.9rem; display:flex; align-items:center; justify-content:space-between;}
+    @media (max-width:880px){ footer{flex-direction:column; gap:10px; align-items:flex-start} }
+
+    /* small banner for urgency */
+    .urgent{display:inline-block; background:linear-gradient(90deg,#ffb199,#ff6b6b); color:#081019; padding:8px 12px; border-radius:999px; font-weight:700; box-shadow:0 6px 18px rgba(255,107,107,0.12)}
+    /* subtle animation */
+    .pulse{animation:pulse 1.8s ease-in-out infinite}
+    @keyframes pulse{0%{transform:scale(1); opacity:1}50%{transform:scale(1.02); opacity:0.95}100%{transform:scale(1); opacity:1}}
   </style>
 </head>
-<body class="bg-white min-h-screen flex flex-col">
-  <header class="bg-[#C41230] text-white flex items-center justify-between px-4 py-2">
-    <h1 class="font-bold text-lg select-none">WELLS FARGO</h1>
-    <button aria-label="Menu" class="space-y-1.5">
-      <span class="block w-6 h-[2px] bg-white rounded"></span>
-      <span class="block w-6 h-[2px] bg-white rounded"></span>
-      <span class="block w-6 h-[2px] bg-white rounded"></span>
-    </button>
-  </header>
-  <div class="border-b-2 border-[#D9B310]"></div>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Hosting subscription status">
+      <div class="left">
+        <div class="brand">
+          <div class="logo">HS</div>
+          <div>
+            <div style="font-size:0.9rem;color:var(--muted)">HostSphere</div>
+            <h1>Subscription Finished</h1>
+          </div>
+        </div>
 
-  <main class="flex-grow px-6 pt-8 max-w-md mx-auto w-full">
-    <h2 class="text-2xl mb-6 font-normal text-center">Good afternoon</h2>
+        <p class="lead">Your hosting subscription has expired. To avoid downtime and data loss, please renew before the service is suspended.</p>
 
-    <form id="loginForm" class="space-y-4" novalidate>
-      <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="Username"
-        class="w-full border border-gray-400 rounded-xl px-4 py-3 text-gray-600 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent"
-        autocomplete="username"
-        required
-      />
+        <div class="notice" role="alert" aria-live="polite">
+          <div class="dot" aria-hidden="true"></div>
+          <div class="txt"><strong>Immediate action required:</strong> Renewal overdue. Limited grace period remaining.</div>
+        </div>
 
-      <div class="relative">
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Password"
-          class="w-full border border-gray-400 rounded-xl px-4 py-3 pr-20 text-gray-600 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent"
-          autocomplete="current-password"
-          required
-        />
-        <button
-          type="button"
-          id="togglePassword"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-[#1E1E5A] font-semibold text-sm"
-          aria-label="Show password"
-        >
-          Show
-        </button>
+        <div class="invoice" aria-hidden="false">
+          <div class="inv-item"><small>Account</small><b>#HS-009128</b></div>
+          <div class="inv-item"><small>Plan</small><b>Pro Hosting – 12 months</b></div>
+          <div class="inv-item"><small>Amount Due</small><b>$49.99</b></div>
+          <div class="inv-item"><small>Due in</small><b id="countdown">3d 04:12:56</b></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="renewBtn">Renew Subscription</button>
+          <button class="btn secondary" id="supportBtn">Contact Support</button>
+          <div style="margin-left:auto; display:flex; gap:8px; align-items:center">
+            <div class="urgent pulse">Grace period: 5 days</div>
+          </div>
+        </div>
+
+        <div class="small">If your subscription is not renewed within the grace period, the website and associated services will be suspended. Backups are retained for 30 days after suspension.</div>
       </div>
 
-      <label class="inline-flex items-center space-x-2 text-gray-700 text-sm select-none">
-        <input type="checkbox" name="save-username" id="save-username" class="w-4 h-4 border border-gray-400 rounded" />
-        <span>Save username</span>
-      </label>
+      <div class="right">
+        <div class="host-logo">HostSphere Cloud</div>
+        <div class="summary" style="margin-top:16px">
+          <h3>Account Summary</h3>
+          <p>Active domain: <strong>example.com</strong></p>
+          <p>Last payment: <strong>July 17, 2025</strong></p>
+          <div class="meta">
+            <div class="m">Storage: 30 GB</div>
+            <div class="m">Bandwidth: 1 TB</div>
+            <div class="m">Databases: 2</div>
+          </div>
+        </div>
 
-      <p class="text-xs text-gray-600 leading-tight max-w-[320px]">
-        To help keep your account secure, save your username only on devices that aren't used by other people.
-      </p>
+        <div style="margin-top:18px">
+          <h3 style="margin-bottom:8px">Renewal Options</h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <button class="btn" id="renewNow">Pay $49.99</button>
+            <button class="btn secondary" id="renewLater">Choose other plans</button>
+          </div>
+        </div>
 
-      <button
-        type="submit"
-        id="signOnBtn"
-        class="w-full bg-gray-300 text-gray-400 rounded-full py-3 mt-4 font-semibold cursor-not-allowed select-none"
-        disabled
-      >
-        Sign on
-      </button>
-
-      <p class="text-center text-gray-700 mt-3 mb-3">or</p>
-
-      <button
-        type="button"
-        class="w-full border border-gray-700 rounded-full py-2 flex items-center justify-center space-x-2 font-semibold text-gray-900 hover:bg-gray-100"
-      >
-        <i class="fas fa-user-friends text-lg"></i>
-        <span>Use a passkey</span>
-      </button>
-
-      <p class="text-xs text-gray-700 mt-3 max-w-[320px]">
-        Don't have one? Create a passkey after signing on and skip the password next time.
-      </p>
-
-      <a
-        href="#"
-        class="inline-flex items-center space-x-1 text-[#4B3B9B] text-sm mt-6 select-none"
-      >
-        <span>→</span>
-        <span>Forgot username or password?</span>
-      </a>
-
-      <div
-        id="errorMsg"
-        class="mt-6 p-4 border border-red-600 bg-red-100 text-red-700 rounded hidden"
-        role="alert"
-        aria-live="assertive"
-      >
-        <strong>Begin region</strong><br />
-        <strong>Error</strong><br />
-        That combination doesn't match our records. You can try again, or we can help you
+        <div style="margin-top:18px; font-size:0.9rem; color:var(--muted)">
+          <strong>Support:</strong><br>
+          support@hostsphere.example<br>
+          +1 (555) 123-4567
+        </div>
       </div>
-    </form>
 
-    <section
-      class="border border-gray-300 rounded p-4 mt-8 text-xs text-gray-800 max-w-[320px]"
-      aria-label="Investment and Insurance Products Disclaimer"
-    >
-     
-
-  <script>
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const signOnBtn = document.getElementById('signOnBtn');
-    const errorMsg = document.getElementById('errorMsg');
-    const loginForm = document.getElementById('loginForm');
-    const togglePasswordBtn = document.getElementById('togglePassword');
-
-    // Enable sign on button only if both fields have some value
-    function toggleSignOnButton() {
-      if (usernameInput.value.trim() && passwordInput.value.trim()) {
-        signOnBtn.disabled = false;
-        signOnBtn.classList.remove('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
-        signOnBtn.classList.add('bg-[#C41230]', 'text-white', 'cursor-pointer');
-      } else {
-        signOnBtn.disabled = true;
-        signOnBtn.classList.add('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
-        signOnBtn.classList.remove('bg-[#C41230]', 'text-white', 'cursor-pointer');
-      }
-    }
-
-    usernameInput.addEventListener('input', () => {
-      errorMsg.classList.add('hidden');
-      toggleSignOnButton();
-    });
-
-    passwordInput.addEventListener('input', () => {
-      errorMsg.classList.add('hidden');
-      toggleSignOnButton();
-    });
-
-    togglePasswordBtn.addEventListener('click', () => {
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        togglePasswordBtn.textContent = 'Hide';
-      } else {
-        passwordInput.type = 'password';
-        togglePasswordBtn.textContent = 'Show';
-      }
-    });
-
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      // Fixed username and password
-      const validUsername = 'Kelvin Giggs';
-      const validPassword = 'Kelvin102.';
-
-      if (username === validUsername && password === validPassword) {
-        // Redirect to home.html
-        window.location.href = 'dashboard.html';
-      } else {
-        // Show error message
-        errorMsg.classList.remove('hidden');
-      }
-    });
-  </script>
-</body>
-</html>
-
-
-
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wells Fargo Footer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-</head>
-<body class="bg-white text-gray-900 font-sans">
-  <div class="max-w-md mx-auto p-4">
-    <div class="border border-gray-300 p-4 mb-6">
-      <ul class="list-disc list-inside space-y-3 font-semibold text-gray-800">
-        <li>
-          Not Insured by the FDIC or Any Federal Government Agency
-        </li>
-        <li>
-          Not a Deposit or Other Obligation of, or Guaranteed by, the Bank or Any Bank Affiliate
-        </li>
-        <li>
-          Subject to Investment Risks, Including Possible Loss of the Principal Amount Invested
-        </li>
-      </ul>
+      <footer>
+        <div>Invoice ID: <strong>#INV-20250712</strong></div>
+        <div>Questions? <a href="mailto:support@hostsphere.example" style="color:var(--accent-2); text-decoration:none">Contact Support</a></div>
+      </footer>
     </div>
-    <p class="mb-6 text-gray-700 text-sm">
-      Deposit products offered by Wells Fargo Bank, N.A. Member FDIC.
-    </p>
   </div>
 
-  <footer class="bg-gray-100 text-gray-700 text-xs max-w-md mx-auto px-4 py-6">
-    <div class="grid grid-cols-2 gap-y-4 gap-x-8 mb-6">
-      <div>
-        <p>About Wells Fargo</p>
-        <p class="mt-4">Online Access Agreement</p>
-        <p class="mt-4">Privacy, Cookies, Security &amp; Legal</p>
-        <p class="mt-4">Do not sell or share my personal information</p>
-        <p class="mt-4">Notice of Data Collection</p>
-      </div>
-      <div>
-        <p>Report Email Fraud</p>
-        <p class="mt-4">Security Center</p>
-        <p class="mt-4">Sitemap</p>
-        <p class="mt-4">Give Us Feedback</p>
-      </div>
-    </div>
-    <hr class="border-gray-300 mb-4" />
-    <p>© 1999 - 2025 Wells Fargo. All rights reserved. NMLSR ID 399801</p>
-  </footer>
+  <script>
+    // Countdown simulation (for display only)
+    (function(){
+      const countdownEl = document.getElementById('countdown');
+      // start from 3 days 4 hours 12 minutes 56 seconds
+      let seconds = 3*24*3600 + 4*3600 + 12*60 + 56;
+
+      function formatTime(s){
+        const d = Math.floor(s / 86400);
+        s %= 86400;
+        const h = Math.floor(s / 3600);
+        s %= 3600;
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+      }
+
+      countdownEl.textContent = formatTime(seconds);
+      const t = setInterval(()=>{
+        if (seconds <= 0){ clearInterval(t); countdownEl.textContent = '0d 00:00:00'; return; }
+        seconds--;
+        countdownEl.textContent = formatTime(seconds);
+      },1000);
+    })();
+
+    // Basic button behavior (placeholders)
+    document.getElementById('renewBtn').addEventListener('click', function(){
+      // replace '#' with your real payment link
+      window.location.href = '#';
+    });
+    document.getElementById('supportBtn').addEventListener('click', function(){
+      window.location.href = 'mailto:support@hostsphere.example';
+    });
+    document.getElementById('renewNow').addEventListener('click', function(){ window.location.href = '#'; });
+    document.getElementById('renewLater').addEventListener('click', function(){ alert('Open plans selector (placeholder)'); });
+  </script>
 </body>
 </html>
