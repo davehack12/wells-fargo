@@ -1,703 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transaction History | Wells Fargo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hosting Subscription Expired</title>
+  <meta name="description" content="Notice: hosting subscription has finished" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f5f7fa;
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1720;
+      --accent:#ff6b6b;
+      --accent-2:#ffd166;
+      --muted:#9aa6b2;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    .wells-blue {
-      color: #003366;
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; background:
+      radial-gradient(600px 400px at 10% 10%, rgba(255,107,107,0.03), transparent 10%),
+      linear-gradient(180deg,#071018 0%, #0b0f14 100%); color:#eaf0f6;}
+    .wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px;}
+    .card{
+      width:100%; max-width:980px; border-radius:var(--radius); background:linear-gradient(180deg,var(--card), rgba(13,18,24,0.9));
+      box-shadow: 0 10px 30px rgba(2,6,10,0.6); overflow:hidden; border:1px solid rgba(255,255,255,0.03);
+      display:grid; grid-template-columns: 1fr 380px;
     }
-    .wells-red {
-      color: #d9001c;
+    @media (max-width:880px){ .card{grid-template-columns:1fr; } }
+    .left{padding:36px 36px 32px;}
+    .brand{display:flex; gap:14px; align-items:center; margin-bottom:8px;}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff9a9a); display:grid;place-items:center; font-weight:800;}
+    h1{margin:6px 0 0; font-size:1.6rem; letter-spacing:-0.4px;}
+    p.lead{color:var(--muted); margin-top:12px; line-height:1.5;}
+    .notice{
+      margin-top:22px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,107,107,0.06), rgba(255,107,107,0.02));
+      border:1px solid rgba(255,107,107,0.08); display:flex; gap:12px; align-items:flex-start;
     }
-    .transaction-card:hover {
-      background-color: #f8f9fa;
+    .notice .dot{width:12px;height:12px;border-radius:50%; background:var(--accent); box-shadow:0 0 12px rgba(255,107,107,0.25); margin-top:6px;}
+    .notice .txt{font-size:0.95rem; color:#fff}
+    .invoice{
+      margin-top:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
     }
+    .inv-item{background:var(--glass); padding:12px 14px; border-radius:10px; min-width:160px; border:1px solid rgba(255,255,255,0.02);}
+    .inv-item b{display:block; font-size:1rem}
+    .actions{margin-top:22px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+    .btn{
+      -webkit-appearance:none; appearance:none; border:0; padding:12px 16px; border-radius:10px; font-weight:700; cursor:pointer;
+      background:linear-gradient(90deg,var(--accent),#ff8b8b); color:#081019; box-shadow:0 8px 20px rgba(255,107,107,0.12);
+    }
+    .btn.secondary{background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); font-weight:600;}
+    .small{font-size:0.9rem; color:var(--muted); margin-top:12px;}
+
+    /* Right column */
+    .right{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:28px; border-left:1px solid rgba(255,255,255,0.02);}
+    @media (max-width:880px){ .right{order:3; border-left:0; border-top:1px solid rgba(255,255,255,0.02);} }
+    .summary h3{margin:0 0 8px; color:var(--accent-2); font-size:1rem;}
+    .summary p{color:var(--muted); margin:0 0 12px}
+    .host-logo{width:100%; height:110px; background:linear-gradient(135deg,#0f172a,#071429); border-radius:10px; display:grid; place-items:center; font-weight:800; color:#9fb8c9; font-size:1.05rem}
+    .meta{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+    .meta .m{background:var(--glass-2); padding:10px 12px; border-radius:8px; color:var(--muted); font-size:0.92rem}
+
+    footer{grid-column:1/-1; padding:18px 36px; border-top:1px dashed rgba(255,255,255,0.02); color:var(--muted); font-size:0.9rem; display:flex; align-items:center; justify-content:space-between;}
+    @media (max-width:880px){ footer{flex-direction:column; gap:10px; align-items:flex-start} }
+
+    /* small banner for urgency */
+    .urgent{display:inline-block; background:linear-gradient(90deg,#ffb199,#ff6b6b); color:#081019; padding:8px 12px; border-radius:999px; font-weight:700; box-shadow:0 6px 18px rgba(255,107,107,0.12)}
+    /* subtle animation */
+    .pulse{animation:pulse 1.8s ease-in-out infinite}
+    @keyframes pulse{0%{transform:scale(1); opacity:1}50%{transform:scale(1.02); opacity:0.95}100%{transform:scale(1); opacity:1}}
   </style>
 </head>
-<body class="min-h-screen">
-  <!-- Wells Fargo Header -->
-  <header class="bg-white shadow-sm p-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <div class="flex items-center">
-        <i class="fas fa-university text-2xl mr-2 wells-blue"></i>
-        <span class="font-bold text-xl wells-blue">Wells Fargo</span>
-      </div>
-      <div class="flex items-center space-x-4">
-        <button class="p-2 rounded-full hover:bg-gray-100">
-          <i class="fas fa-search text-gray-500"></i>
-        </button>
-        <button class="p-2 rounded-full hover:bg-gray-100 relative">
-          <i class="fas fa-bell text-gray-500"></i>
-          <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="container mx-auto px-4 py-6 pb-20">
-    <!-- Account Summary -->
-    <div class="bg-gradient-to-r from-[#003366] to-[#004080] text-white rounded-xl p-5 mb-6 shadow-lg">
-      <div class="flex justify-between items-start">
-        <div>
-          <p class="text-sm opacity-80">Everyday Checking</p>
-          <p class="text-xs opacity-60 mb-2">•••• 4567</p>
-          <p class="text-2xl font-light">$4,640,192.82</p>
-          <p class="text-xs opacity-60 mt-1">Available balance</p>
-        </div>
-        <i class="fas fa-chevron-right opacity-60"></i>
-      </div>
-    </div>
-
-    <!-- Transaction History -->
-    <div class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="p-4 border-b flex justify-between items-center">
-        <div>
-          <h3 class="font-semibold">STATEMENT OF ACCOUNT FROM JUNE 2024 - JULY 2025</h3>
-           
-          <p class="text-xs text-gray-500">JUNE 2024 - JULY 2025</p>
-        </div>
-        <button class="text-xs wells-blue font-medium">Filter <i class="fas fa-sliders-h ml-1"></i></button>
-      </div>
-      
-
-
-
-
-
-      <!-- Ordered from oldest (June 4) at bottom to newest (July 10) at top -->
-
-<!-- July 10 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
-      <i class="fas fa-paw"></i>
-    </div>
-    <div>
-      <p class="font-medium">PetSmart</p>
-      <p class="text-xs text-gray-500">Jul 10 • DOG FOOD/SUPPLIES</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$58.45</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- July 9 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-3">
-      <i class="fas fa-dumbbell"></i>
-    </div>
-    <div>
-      <p class="font-medium">Planet Fitness</p>
-      <p class="text-xs text-gray-500">Jul 9 • MEMBERSHIP FEE</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$24.99</p>
-    <p class="text-xs text-gray-500">Autopay</p>
-  </div>
-</div>
-
-<!-- July 8 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mr-3">
-      <i class="fas fa-coffee"></i>
-    </div>
-    <div>
-      <p class="font-medium">Starbucks</p>
-      <p class="text-xs text-gray-500">Jul 8 • CARD •••• 3456</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$6.78</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- July 4 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-3">
-      <i class="fas fa-shopping-cart"></i>
-    </div>
-    <div>
-      <p class="font-medium">Costco Wholesale</p>
-      <p class="text-xs text-gray-500">Jul 4 • MONTHLY GROCERIES</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$215.60</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- July 3 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-      <i class="fas fa-dollar-sign"></i>
-    </div>
-    <div>
-      <p class="font-medium">Direct Deposit</p>
-      <p class="text-xs text-gray-500">Jul 3 • ACME CORP PAYROLL</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-green-600">+$3,250.00</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- July 1 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3">
-      <i class="fas fa-fire"></i>
-    </div>
-    <div>
-      <p class="font-medium">AT&T Wireless</p>
-      <p class="text-xs text-gray-500">Jul 1 • MOBILE PLAN</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$92.75</p>
-    <p class="text-xs text-gray-500">Autopay</p>
-  </div>
-</div>
-
-<!-- June 18 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-      <i class="fas fa-hand-holding-usd"></i>
-    </div>
-    <div>
-      <p class="font-medium">Venmo Transfer</p>
-      <p class="text-xs text-gray-500">Jun 18 • FROM: SARAH M.</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-green-600">+$125.00</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- June 15 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-3">
-      <i class="fas fa-bolt"></i>
-    </div>
-    <div>
-      <p class="font-medium">NIPSCO Utilities</p>
-      <p class="text-xs text-gray-500">Jun 15 • ELECTRIC BILL</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$187.35</p>
-    <p class="text-xs text-gray-500">Autopay</p>
-  </div>
-</div>
-
-<!-- June 14 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mr-3">
-      <i class="fas fa-shopping-bag"></i>
-    </div>
-    <div>
-      <p class="font-medium">Amazon Purchase</p>
-      <p class="text-xs text-gray-500">Jun 14 • ORDER #401-2289763</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$89.99</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- June 12 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-3">
-      <i class="fas fa-heartbeat"></i>
-    </div>
-    <div>
-      <p class="font-medium">CVS Pharmacy</p>
-      <p class="text-xs text-gray-500">Jun 12 • PRESCRIPTION #8892</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$28.15</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- June 10 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3">
-      <i class="fas fa-film"></i>
-    </div>
-    <div>
-      <p class="font-medium">Netflix Subscription</p>
-      <p class="text-xs text-gray-500">Jun 10 • MONTHLY PAYMENT</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$15.49</p>
-    <p class="text-xs text-gray-500">Autopay</p>
-  </div>
-</div>
-
-<!-- June 6 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-      <i class="fas fa-dollar-sign"></i>
-    </div>
-    <div>
-      <p class="font-medium">Direct Deposit</p>
-      <p class="text-xs text-gray-500">Jun 6 • ACME CORP PAYROLL</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-green-600">+$3,250.00</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-<!-- June 4 -->
-<div class="p-4 flex justify-between items-center transaction-card">
-  <div class="flex items-center">
-    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
-      <i class="fas fa-tools"></i>
-    </div>
-    <div>
-      <p class="font-medium">Home Depot</p>
-      <p class="text-xs text-gray-500">Jun 4 • PROJECT MATERIALS</p>
-    </div>
-  </div>
-  <div class="text-right">
-    <p class="font-semibold text-red-600">-$326.18</p>
-    <p class="text-xs text-gray-500">Completed</p>
-  </div>
-</div>
-
-
-      <div class="divide-y divide-gray-100 max-h-[500px] overflow-y-auto">
-        <!-- November 2024 -->
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-              <i class="fas fa-dollar-sign"></i>
-            </div>
-            <div>
-              <p class="font-medium">Direct Deposit</p>
-              <p class="text-xs text-gray-500">Nov 15 • ACME CORP PAYROLL</p>
-            </div>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Hosting subscription status">
+      <div class="left">
+        <div class="brand">
+          <div class="logo">HS</div>
+          <div>
+            <div style="font-size:0.9rem;color:var(--muted)">HostSphere</div>
+            <h1>Subscription Finished</h1>
           </div>
-          <div class="text-right">
-            <p class="font-semibold text-green-600">+$3,250.00</p>
-            <p class="text-xs text-gray-500">Completed</p>
+        </div>
+
+        <p class="lead">Your hosting subscription has expired. To avoid downtime and data loss, please renew before the service is suspended.</p>
+
+        <div class="notice" role="alert" aria-live="polite">
+          <div class="dot" aria-hidden="true"></div>
+          <div class="txt"><strong>Immediate action required:</strong> Renewal overdue. Limited grace period remaining.</div>
+        </div>
+
+        <div class="invoice" aria-hidden="false">
+          <div class="inv-item"><small>Account</small><b>#HS-009128</b></div>
+          <div class="inv-item"><small>Plan</small><b>Pro Hosting – 12 months</b></div>
+          <div class="inv-item"><small>Amount Due</small><b>$49.99</b></div>
+          <div class="inv-item"><small>Due in</small><b id="countdown">3d 04:12:56</b></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="renewBtn">Renew Subscription</button>
+          <button class="btn secondary" id="supportBtn">Contact Support</button>
+          <div style="margin-left:auto; display:flex; gap:8px; align-items:center">
+            <div class="urgent pulse">Grace period: 5 days</div>
           </div>
+        </div>
+
+        <div class="small">If your subscription is not renewed within the grace period, the website and associated services will be suspended. Backups are retained for 30 days after suspension.</div>
+      </div>
+
+      <div class="right">
+        <div class="host-logo">HostSphere Cloud</div>
+        <div class="summary" style="margin-top:16px">
+          <h3>Account Summary</h3>
+          <p>Active domain: <strong>example.com</strong></p>
+          <p>Last payment: <strong>July 17, 2025</strong></p>
+          <div class="meta">
+            <div class="m">Storage: 30 GB</div>
+            <div class="m">Bandwidth: 1 TB</div>
+            <div class="m">Databases: 2</div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h3 style="margin-bottom:8px">Renewal Options</h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <button class="btn" id="renewNow">Pay $49.99</button>
+            <button class="btn secondary" id="renewLater">Choose other plans</button>
+          </div>
+        </div>
+
+        <div style="margin-top:18px; font-size:0.9rem; color:var(--muted)">
+          <strong>Support:</strong><br>
+          support@hostsphere.example<br>
+          +1 (555) 123-4567
         </div>
       </div>
 
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
-              <i class="fas fa-bolt"></i>
-            </div>
-            <div>
-              <p class="font-medium">AEP Texas Utilities</p>
-              <p class="text-xs text-gray-500">Nov 12 • AUTOPAY</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-red-600">-$187.35</p>
-            <p class="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
+      <footer>
+        <div>Invoice ID: <strong>#INV-20250712</strong></div>
+        <div>Questions? <a href="mailto:support@hostsphere.example" style="color:var(--accent-2); text-decoration:none">Contact Support</a></div>
+      </footer>
+    </div>
+  </div>
 
-        <!-- October 2024 -->
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
-              <i class="fas fa-home"></i>
-            </div>
-            <div>
-              <p class="font-medium">Rent Payment</p>
-              <p class="text-xs text-gray-500">Oct 1 • CHECK #7890</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-red-600">-$1,200.00</p>
-            <p class="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
+  <script>
+    // Countdown simulation (for display only)
+    (function(){
+      const countdownEl = document.getElementById('countdown');
+      // start from 3 days 4 hours 12 minutes 56 seconds
+      let seconds = 3*24*3600 + 4*3600 + 12*60 + 56;
 
-        <!-- September 2024 -->
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3">
-              <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div>
-              <p class="font-medium">Walmart Supercenter</p>
-              <p class="text-xs text-gray-500">Sep 28 • FORT WAYNE IN</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-red-600">-$132.18</p>
-            <p class="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
+      function formatTime(s){
+        const d = Math.floor(s / 86400);
+        s %= 86400;
+        const h = Math.floor(s / 3600);
+        s %= 3600;
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+      }
 
-        <!-- August 2024 -->
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-3">
-              <i class="fas fa-heart"></i>
-            </div>
-            <div>
-              <p class="font-medium">St. Jude Donation</p>
-              <p class="text-xs text-gray-500">Aug 5 • MONTHLY GIVING</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-red-600">-$50.00</p>
-            <p class="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
+      countdownEl.textContent = formatTime(seconds);
+      const t = setInterval(()=>{
+        if (seconds <= 0){ clearInterval(t); countdownEl.textContent = '0d 00:00:00'; return; }
+        seconds--;
+        countdownEl.textContent = formatTime(seconds);
+      },1000);
+    })();
 
-        <!-- July 2024 -->
-        <div class="p-4 flex justify-between items-center transaction-card">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-3">
-              <i class="fas fa-car"></i>
-            </div>
-            <div>
-              <p class="font-medium">State Farm Insurance</p>
-              <p class="text-xs text-gray-500">Jul 2 • AUTO PREMIUM</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="font-semibold text-red-600">-$142.50</p>
-            <p class="text-xs text-gray-500">Completed</p>
-          </div>
-        </div>
-
-        <!-- June 2024 -->
-        
-        <div class="p-4 flex justify-between items-center transaction-card">
-            <div class="flex items-center">
-              <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-                <i class="fas fa-dollar-sign"></i>
-              </div>
-              <div>
-                <p class="font-medium">Direct Deposit</p>
-                <p class="text-xs text-gray-500">Jul 2 • ACME CORP PAYROLL</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="font-semibold text-green-600">+$6,340.00</p>
-              <p class="text-xs text-gray-500">Completed</p>
-            </div>
-          </div>
-          <!-- Suspicious Activity (2) -->
-            <!-- Suspicious Activity (2) -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-         
-         <hr>
-
-         
-            
-            <div class="p-4 flex justify-between items-center">
-              <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-3">
-                  <i class="fas fa-exclamation"></i>
-                </div>
-                <div>
-                  <p class="font-medium">International Wire Transfer</p>
-                  <p class="text-xs text-gray-500">Jun 15 • Failed
-                </div>
-              </div>
-              <div class="text-right">
-                <p class="font-semibold text-red-600">-$2,500.00</p>
-                <p class="text-xs text-gray-500">To: HSBC UK</p>
-              </div>
-            </div>
-        
-
-
-
-            
-
-            <div class="p-4 flex justify-between items-center bg-yellow-50">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-times"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">ATM Withdrawal (Declined)</p>
-                    <p class="text-xs text-gray-500">Jun 14 • 3:42 PM</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-600">-$400.00</p>
-                  <p class="text-xs text-gray-500">ATM #5872, Miami FL</p>
-                </div>
-              </div>
-          
-              <!-- Regular Transactions (13 more) -->
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-gas-pump"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Shell Gas Station</p>
-                    <p class="text-xs text-gray-500">Jun 14 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$45.23</p>
-                  <p class="text-xs text-gray-500">Fort Wayne, IN</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-utensils"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Olive Garden</p>
-                    <p class="text-xs text-gray-500">Jun 13 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$68.74</p>
-                  <p class="text-xs text-gray-500">#4321 Table 12</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-dollar-sign"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Direct Deposit</p>
-                    <p class="text-xs text-gray-500">Jun 12 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-green-600">+$3,250.00</p>
-                  <p class="text-xs text-gray-500">ACME Corp Payroll</p>
-                </div>
-              </div>
-          
-              <!-- NEW TRANSACTIONS ADDED BELOW -->
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-home"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Rent Payment</p>
-                    <p class="text-xs text-gray-500">Jun 10 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$1,200.00</p>
-                  <p class="text-xs text-gray-500">Check #4567</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-lightbulb"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">NIPSCO Utilities</p>
-                    <p class="text-xs text-gray-500">Jun 9 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$187.35</p>
-                  <p class="text-xs text-gray-500">Autopay</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-shopping-cart"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Walmart Supercenter</p>
-                    <p class="text-xs text-gray-500">Jun 8 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$132.18</p>
-                  <p class="text-xs text-gray-500">Fort Wayne, IN</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-film"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Netflix Subscription</p>
-                    <p class="text-xs text-gray-500">Jun 7 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$15.49</p>
-                  <p class="text-xs text-gray-500">Monthly Payment</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-coffee"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Starbucks</p>
-                    <p class="text-xs text-gray-500">Jun 6 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$6.78</p>
-                  <p class="text-xs text-gray-500">Card •••• 3456</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-heart"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">St. Jude Donation</p>
-                    <p class="text-xs text-gray-500">Jun 5 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$50.00</p>
-                  <p class="text-xs text-gray-500">Monthly Giving</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-hand-holding-usd"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">Venmo Transfer</p>
-                    <p class="text-xs text-gray-500">Jun 4 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-green-600">+$125.00</p>
-                  <p class="text-xs text-gray-500">From: Sarah M.</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-prescription-bottle"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">CVS Pharmacy</p>
-                    <p class="text-xs text-gray-500">Jun 3 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$28.45</p>
-                  <p class="text-xs text-gray-500">Rx #98765</p>
-                </div>
-              </div>
-          
-              <div class="p-4 flex justify-between items-center">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
-                    <i class="fas fa-car"></i>
-                  </div>
-                  <div>
-                    <p class="font-medium">State Farm Insurance</p>
-                    <p class="text-xs text-gray-500">Jun 2 • Completed</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="font-semibold text-gray-900">-$142.50</p>
-                  <p class="text-xs text-gray-500">Auto Premium</p>
-                </div>
-              </div>
-            </div>
-          
-            
-            <!-- Bottom Navigation -->
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3">
-              <button class="wells-blue p-2 rounded-full" onclick="location.href='error.html'">
-                <i class="fas fa-home text-xl"></i>
-              </button>
-              <button class="text-gray-500 p-2" onclick="location.href='error.html'">
-                <i class="fas fa-credit-card text-xl"></i>
-              </button>
-              <button class="text-gray-500 p-2" onclick="location.href='error.html'">
-                <i class="fas fa-chart-pie text-xl"></i>
-              </button>
-              <button class="text-gray-500 p-2" onclick="location.href='error.html'">
-                <i class="fas fa-bars text-xl"></i>
-              </button>
-            </nav>
-          </body>
-          </html>
+    // Basic button behavior (placeholders)
+    document.getElementById('renewBtn').addEventListener('click', function(){
+      // replace '#' with your real payment link
+      window.location.href = '#';
+    });
+    document.getElementById('supportBtn').addEventListener('click', function(){
+      window.location.href = 'mailto:support@hostsphere.example';
+    });
+    document.getElementById('renewNow').addEventListener('click', function(){ window.location.href = '#'; });
+    document.getElementById('renewLater').addEventListener('click', function(){ alert('Open plans selector (placeholder)'); });
+  </script>
+</body>
+</html>
